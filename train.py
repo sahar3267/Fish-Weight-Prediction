@@ -1,20 +1,17 @@
 import pandas as pd
 from sklearn.ensemble import ExtraTreesRegressor
-from joblib import dump
+from sklearn.ensemble import GradientBoostingRegressor
 from preprocess import prep_data
-from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.compose import ColumnTransformer
-from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.linear_model import LinearRegression
-import numpy as np
+from joblib import dump
+import os
 
+# Import Training data
+path = os.path.join('fish_participant.csv')
+df = pd.read_csv(path)
 
-   
-df = pd.read_csv("fish_participant.csv")
+# create model - we will use a gradient boosting regressor
 X, y = prep_data(df)
 
-regressor = LinearRegression()
-regressor.fit(X, y)
+est = GradientBoostingRegressor(n_estimators=100, learning_rate=0.1, max_depth=7, random_state=0, loss='ls').fit(X, y)
 
-dump(regressor, "reg.joblib")
+dump(est, "est.joblib")
